@@ -71,6 +71,16 @@ footer{margin-top:36px;padding:28px 0 48px;border-top:1px solid var(--line);colo
 footer strong{color:var(--ink);font-family:var(--display);font-weight:500}
 
 .loading{padding:60px 0;text-align:center;color:var(--muted)}
+.item.has-photo{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:start}
+.thumb{width:96px;height:96px;border-radius:14px;overflow:hidden;padding:0;border:0;cursor:zoom-in;background:var(--line);display:block}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.item.out .thumb img{filter:grayscale(1);opacity:.6}
+.itext{min-width:0}
+@media (min-width:520px){.item.has-photo{grid-template-columns:120px 1fr}.thumb{width:120px;height:120px}}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(10,16,34,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:78vh;border-radius:16px;object-fit:contain}
+.lightbox p{color:#F3F5F1;font-family:var(--display);font-size:20px;margin:14px 0 0;text-align:center}
+.lightbox[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -121,10 +131,22 @@ var FALLBACK_CSV = "القسم,الصنف,الاسم بالإنجليزي,الو
     return v==='' ? null : Number(v);
   }
 
+  // يقبل لينك Google Drive أو أي لينك صورة أو اسم ملف مرفوع جنب المنيو
+  function photoUrl(v){
+    v = String(v||'').trim(); if (!v) return '';
+    if (/drive\.google\.com|docs\.google\.com/.test(v)){
+      var m = v.match(/\/d\/([\w-]{10,})/) || v.match(/[?&]id=([\w-]{10,})/);
+      return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1000' : '';
+    }
+    if (/^https?:\/\//i.test(v)) return v;
+    if (/^[\w\-\/. ]+\.(jpe?g|png|webp|gif|avif)$/i.test(v)) return v;
+    return '';
+  }
+
   function buildMenu(rows){
     var head = rows[0].map(function(h){return h.trim();});
     function col(name){ return head.indexOf(name); }
-    var cC=col('القسم'), cN=col('الصنف'), cE=col('الاسم بالإنجليزي'), cD=col('الوصف'), cP=col('السعر'), cA=col('متاح');
+    var cC=col('القسم'), cN=col('الصنف'), cE=col('الاسم بالإنجليزي'), cD=col('الوصف'), cP=col('السعر'), cA=col('متاح'), cI=Math.max(col('الصورة'),col('صورة'));
     if (cN<0) throw new Error('missing columns');
     var cats=[], byName={};
     rows.slice(1).forEach(function(r){
@@ -135,6 +157,7 @@ var FALLBACK_CSV = "القسم,الصنف,الاسم بالإنجليزي,الو
       byName[cat].items.push({
         name:name,
         en:cE>=0 ? (r[cE]||'').trim() : '',
+        photo:cI>=0 ? photoUrl(r[cI]) : '',
         desc:cD>=0 ? (r[cD]||'').trim() : '',
         price:cP>=0 ? toNum(r[cP]) : null,
         available:['لا','لأ','خلص','خلصت','no','0','false'].indexOf(av)<0
@@ -161,18 +184,39 @@ var FALLBACK_CSV = "القسم,الصنف,الاسم بالإنجليزي,الو
     cats.forEach(function(c,i){
       h += '<section class="cat" id="c' + i + '"><h2>' + esc(c.title) + '</h2>';
       c.items.forEach(function(it){
-        h += '<div class="item' + (it.available?'':' out') + '"><div class="line"><span class="iname">' + esc(it.name)
+        var text = '<div class="line"><span class="iname">' + esc(it.name)
           + (it.available?'':'<span class="badge">خلصت النهارده</span>') + '</span><span class="lead"></span>'
           + (it.price!=null ? '<span class="price">' + it.price.toLocaleString('en-US') + '<small>' + esc(CONFIG.currency) + '</small></span>' : '')
           + '</div>' + (it.en?'<div class="iname-en">' + esc(it.en) + '</div>':'')
-          + (it.desc?'<p class="desc">' + esc(it.desc) + '</p>':'') + '</div>';
+          + (it.desc?'<p class="desc">' + esc(it.desc) + '</p>':'');
+        if (it.photo){
+          h += '<div class="item has-photo' + (it.available?'':' out') + '">'
+            + '<button class="thumb" type="button" data-src="' + esc(it.photo) + '" data-name="' + esc(it.name) + '" aria-label="صورة ' + esc(it.name) + '">'
+            + '<img src="' + esc(it.photo) + '" alt="' + esc(it.name) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer"></button>'
+            + '<div class="itext">' + text + '</div></div>';
+        } else {
+          h += '<div class="item' + (it.available?'':' out') + '">' + text + '</div>';
+        }
       });
       h += '</section>';
     });
     h += '<footer><strong>' + esc(CONFIG.name) + '</strong><br>' + esc(CONFIG.hours) + '<br>للطلبات: <span dir="ltr">'
       + esc(CONFIG.phone) + '</span><br>' + esc(CONFIG.footnote) + '</footer></main>';
+    h += '<div class="lightbox" id="lb" hidden role="dialog" aria-modal="true"><img alt=""><p></p></div>';
     root.innerHTML = h;
+    // لو صورة مفتحتش، نخفيها والصنف يظهر عادي
+    Array.prototype.forEach.call(root.querySelectorAll('.thumb img'), function(img){
+      img.addEventListener('error', function(){ var it = img.closest('.item'); if (it){ it.classList.remove('has-photo'); } img.parentNode.remove(); });
+    });
   }
+
+  root.addEventListener('click', function(e){
+    var lb = document.getElementById('lb'); if (!lb) return;
+    var t = e.target.closest('.thumb');
+    if (t){ lb.querySelector('img').src = t.dataset.src; lb.querySelector('img').alt = t.dataset.name; lb.querySelector('p').textContent = t.dataset.name; lb.hidden = false; return; }
+    if (e.target.closest('#lb')){ lb.hidden = true; }
+  });
+  document.addEventListener('keydown', function(e){ var lb = document.getElementById('lb'); if (e.key === 'Escape' && lb) lb.hidden = true; });
 
   root.innerHTML = header() + '<p class="loading">بيحمّل المنيو…</p>';
 
