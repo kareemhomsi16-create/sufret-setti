@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سُفرة ستّي — المنيو</title>
+<meta name="description" content="منيو سُفرة ستّي — أكل بيتي مصري">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍲</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F5F1; --ink:#1E2F5C; --saffron:#E3A72F; --pom:#A8323E;
+  --muted:#5F6B82; --line:#D3D9E3; --card:#FFFFFF; --band:#1E2F5C; --bandInk:#F3F5F1;
+  --display:"Reem Kufi","Noto Naskh Arabic",Tahoma,sans-serif;
+  --body:"Noto Naskh Arabic","Geeza Pro",Tahoma,serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#111a33; --ink:#E9ECF4; --muted:#A3ADC2; --line:#2c3a5f; --card:#18234a; --band:#0b1228; --bandInk:#F3F5F1; --pom:#e06a76;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111a33; --ink:#E9ECF4; --muted:#A3ADC2; --line:#2c3a5f; --card:#18234a; --band:#0b1228; --bandInk:#F3F5F1; --pom:#e06a76;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:600px;margin:0 auto;padding:0 20px}
+
+/* Header band with tile pattern */
+.band{background:var(--band);color:var(--bandInk);position:relative;overflow:hidden}
+.band svg.tile{position:absolute;inset:0;width:100%;height:100%;opacity:.22}
+.band .wrap{position:relative;padding-top:44px;padding-bottom:34px;text-align:center}
+.name{font-family:var(--display);font-weight:700;font-size:clamp(52px,15vw,84px);line-height:1.05;color:var(--saffron);margin:0}
+.tagline{margin:10px 0 0;font-size:16px;opacity:.85}
+.latin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:14px;letter-spacing:.02em;opacity:.7;margin-top:2px;direction:ltr}
+
+/* Category nav */
+nav.cats{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px);margin-top:calc(-1 * env(safe-area-inset-top,0px))}
+nav.cats .row{display:flex;gap:6px;overflow-x:auto;padding:10px 20px;max-width:600px;margin:0 auto;scrollbar-width:none}
+nav.cats .row::-webkit-scrollbar{display:none}
+nav.cats a{flex:none;font-family:var(--display);font-weight:500;font-size:15px;color:var(--ink);text-decoration:none;padding:6px 14px;border-radius:999px;border:1px solid var(--line)}
+nav.cats a:hover{border-color:var(--ink)}
+nav.cats a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+
+/* Sections */
+section.cat{padding:34px 0 6px}
+.cat h2{font-family:var(--display);font-weight:700;font-size:28px;margin:0 0 4px;display:flex;align-items:center;gap:12px}
+.cat h2::after{content:"";flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--saffron) 0 6px,transparent 6px 10px)}
+.cat .note{color:var(--muted);font-size:14px;margin:0 0 8px}
+
+.item{padding:14px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.line{display:flex;align-items:baseline;gap:10px}
+.iname{font-weight:600;font-size:19px}
+.lead{flex:1;border-bottom:2px dotted var(--line);transform:translateY(-5px);min-width:20px}
+.price{font-family:var(--display);font-weight:700;font-size:20px;white-space:nowrap;direction:ltr}
+.price small{font-family:var(--body);font-weight:400;font-size:13px;color:var(--muted);margin-left:3px}
+.iname-en{font-family:Georgia,serif;font-style:italic;font-size:13.5px;color:var(--muted);direction:ltr;text-align:right}
+.desc{margin:2px 0 0;color:var(--muted);font-size:15px;max-width:46ch}
+.item.out .iname,.item.out .price{text-decoration:line-through;text-decoration-color:var(--pom);opacity:.55}
+.badge{display:inline-block;font-size:12.5px;font-weight:600;color:#fff;background:var(--pom);padding:0 9px;border-radius:999px;margin-inline-start:8px;vertical-align:middle;line-height:1.9}
+
+footer{margin-top:36px;padding:28px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:15px;text-align:center}
+footer strong{color:var(--ink);font-family:var(--display);font-weight:500}
+
+.loading{padding:60px 0;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+/* ============ إعدادات المطعم — غيّر هنا ============ */
+var CONFIG = {
+  sheetId: "1dCrRnq9qado-iURgyPo3MnwKOkQuYZYTBh-4-_dA73Q",   // رقم الـ Google Sheet
+  name: "سُفرة ستّي",
+  latin: "Sufret Setti",
+  tagline: "أكل بيتي مصري زي ما ستّك كانت بتعمله",
+  currency: "ج.م",
+  hours: "كل يوم من ٩ الصبح لـ ١٢ بالليل",
+  phone: "0100 000 0000",
+  footnote: "الأسعار شاملة ضريبة القيمة المضافة. الخدمة ١٢٪."
+};
+/* ================================================== */
+
+// نسخة احتياطية تظهر لو الشيت ما فتحش لأي سبب
+var FALLBACK_CSV = "القسم,الصنف,الاسم بالإنجليزي,الوصف,السعر,متاح\nفطار,فول بالزيت الحار,\"Ful medames, hot oil\",فول مدمس على نار هادية، كمون وليمون وعيش بلدي سخن,45,نعم\nفطار,طعمية بالسمسم,Sesame taameya (5 pcs),خمس أقراص مقرمشة بالخضرة، مع طحينة,35,نعم\nفطار,شكشوكة بالبسطرمة,Shakshuka with pastirma,بيض بلدي وطماطم وبسطرمة في طاسة نحاس,85,نعم\nفطار,بيض بالسجق,Eggs with sausage,سجق إسكندراني حراق مع بيض وفلفل ألوان,80,نعم\nأكل البيت,كشري ستّي,Koshary,رز وعدس ومكرونة، صلصة بالخل والتوم وبصل محمّر,75,نعم\nأكل البيت,ملوخية بالأرانب,Molokhia with rabbit,ملوخية خضرا بالطشة، نص أرنب وطبق رز أبيض,240,نعم\nأكل البيت,محشي مشكّل,Mixed mahshi,كوسة وباذنجان وفلفل وورق عنب، محشيين رز بالخلطة,150,نعم\nأكل البيت,فتة بالموزة,Fatta with lamb shank,عيش محمّص ورز وصلصة خل وتوم، وموزة ضاني,310,نعم\nأكل البيت,حمام محشي فريك,\"Stuffed pigeon, freekeh\",جوز حمام محشي فريك ومحمّر في السمنة,290,لا\nمشويات,كفتة على الفحم,Charcoal kofta,ربع كيلو مع طحينة وسلطة بلدي وعيش,260,نعم\nمشويات,ريش ضاني,Lamb chops,ربع كيلو ريش متبّلة بالبصل والروزماري,420,نعم\nمشويات,نص فرخة مشوية,Half grilled chicken,متبّلة بالزبادي والبهارات، مع رز وتومية,190,نعم\nحلو,أم علي,Om Ali,رقاق ولبن ومكسرات، طالعة من الفرن,90,نعم\nحلو,رز بلبن بالمكسرات,Rice pudding,ساقع أو سخن، بالقرفة والفستق,60,نعم\nحلو,بسبوسة بالقشطة,Basbousa with cream,سميد بالسمنة وشربات خفيف وقشطة بلدي,70,نعم\nمشروبات,شاي بالنعناع,Mint tea,,25,نعم\nمشروبات,قهوة تركي,Turkish coffee,سادة، مظبوط، أو زيادة,35,نعم\nمشروبات,سوبيا,Sobia,,40,نعم\nمشروبات,كركديه ساقع,Iced hibiscus,,35,نعم\nمشروبات,تمر هندي,Tamarind,,40,نعم\n";
+
+(function(){
+  var root = document.getElementById('root');
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  function parseCSV(text){
+    var rows=[], row=[], f='', q=false;
+    text = text.replace(/^\uFEFF/, '');
+    for (var i=0;i<text.length;i++){
+      var ch=text[i];
+      if (q){
+        if (ch==='"'){ if (text[i+1]==='"'){ f+='"'; i++; } else q=false; }
+        else f+=ch;
+      } else if (ch==='"') q=true;
+      else if (ch===','){ row.push(f); f=''; }
+      else if (ch==='\n' || ch==='\r'){
+        if (ch==='\r' && text[i+1]==='\n') i++;
+        row.push(f); rows.push(row); row=[]; f='';
+      } else f+=ch;
+    }
+    if (f!=='' || row.length){ row.push(f); rows.push(row); }
+    return rows.filter(function(r){ return r.some(function(c){ return c.trim()!==''; }); });
+  }
+
+  function toNum(v){
+    v = String(v||'').replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d);}).replace(/[^0-9.]/g,'');
+    return v==='' ? null : Number(v);
+  }
+
+  function buildMenu(rows){
+    var head = rows[0].map(function(h){return h.trim();});
+    function col(name){ return head.indexOf(name); }
+    var cC=col('القسم'), cN=col('الصنف'), cE=col('الاسم بالإنجليزي'), cD=col('الوصف'), cP=col('السعر'), cA=col('متاح');
+    if (cN<0) throw new Error('missing columns');
+    var cats=[], byName={};
+    rows.slice(1).forEach(function(r){
+      var name=(r[cN]||'').trim(); if (!name) return;
+      var cat=(cC>=0 ? (r[cC]||'').trim() : '') || 'المنيو';
+      if (!byName[cat]){ byName[cat]={title:cat,items:[]}; cats.push(byName[cat]); }
+      var av=(cA>=0 ? (r[cA]||'').trim().toLowerCase() : '');
+      byName[cat].items.push({
+        name:name,
+        en:cE>=0 ? (r[cE]||'').trim() : '',
+        desc:cD>=0 ? (r[cD]||'').trim() : '',
+        price:cP>=0 ? toNum(r[cP]) : null,
+        available:['لا','لأ','خلص','خلصت','no','0','false'].indexOf(av)<0
+      });
+    });
+    return cats;
+  }
+
+  var TILE = '<svg class="tile" aria-hidden="true"><defs><pattern id="t" width="56" height="56" patternUnits="userSpaceOnUse">'
+    + '<path d="M28 4 L34 22 L52 28 L34 34 L28 52 L22 34 L4 28 L22 22 Z" fill="none" stroke="#E3A72F" stroke-width="1.4"/>'
+    + '<circle cx="28" cy="28" r="5" fill="none" stroke="#E3A72F" stroke-width="1.2"/>'
+    + '<path d="M0 0 L8 0 L0 8 Z M56 0 L48 0 L56 8 Z M0 56 L8 56 L0 48 Z M56 56 L48 56 L56 48 Z" fill="#E3A72F"/>'
+    + '</pattern></defs><rect width="100%" height="100%" fill="url(#t)"/></svg>';
+
+  function header(){
+    return '<header class="band">' + TILE + '<div class="wrap"><h1 class="name">' + esc(CONFIG.name) + '</h1>'
+      + '<div class="latin">' + esc(CONFIG.latin) + '</div><p class="tagline">' + esc(CONFIG.tagline) + '</p></div></header>';
+  }
+
+  function render(cats){
+    var h = header() + '<nav class="cats" aria-label="أقسام المنيو"><div class="row">'
+      + cats.map(function(c,i){return '<a href="#c' + i + '">' + esc(c.title) + '</a>';}).join('')
+      + '</div></nav><main class="wrap">';
+    cats.forEach(function(c,i){
+      h += '<section class="cat" id="c' + i + '"><h2>' + esc(c.title) + '</h2>';
+      c.items.forEach(function(it){
+        h += '<div class="item' + (it.available?'':' out') + '"><div class="line"><span class="iname">' + esc(it.name)
+          + (it.available?'':'<span class="badge">خلصت النهارده</span>') + '</span><span class="lead"></span>'
+          + (it.price!=null ? '<span class="price">' + it.price.toLocaleString('en-US') + '<small>' + esc(CONFIG.currency) + '</small></span>' : '')
+          + '</div>' + (it.en?'<div class="iname-en">' + esc(it.en) + '</div>':'')
+          + (it.desc?'<p class="desc">' + esc(it.desc) + '</p>':'') + '</div>';
+      });
+      h += '</section>';
+    });
+    h += '<footer><strong>' + esc(CONFIG.name) + '</strong><br>' + esc(CONFIG.hours) + '<br>للطلبات: <span dir="ltr">'
+      + esc(CONFIG.phone) + '</span><br>' + esc(CONFIG.footnote) + '</footer></main>';
+    root.innerHTML = h;
+  }
+
+  root.innerHTML = header() + '<p class="loading">بيحمّل المنيو…</p>';
+
+  var url = 'https://docs.google.com/spreadsheets/d/' + CONFIG.sheetId + '/gviz/tq?tqx=out:csv&headers=1&t=' + Date.now();
+  var done = false;
+  function useFallback(){ if (done) return; done = true; render(buildMenu(parseCSV(FALLBACK_CSV))); }
+  var timer = setTimeout(useFallback, 8000);
+  fetch(url, {cache:'no-store'}).then(function(r){
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  }).then(function(t){
+    if (/^\s*</.test(t)) throw new Error('sheet not public');
+    var cats = buildMenu(parseCSV(t));
+    if (!cats.length) throw new Error('empty');
+    if (done) return; done = true; clearTimeout(timer); render(cats);
+  }).catch(function(){ clearTimeout(timer); useFallback(); });
+})();
+</script>
+</body>
+</html>
